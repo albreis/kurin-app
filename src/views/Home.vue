@@ -1,5 +1,9 @@
 <template>
   <div class="home">
+    <header>
+      <h1><strong>Kurin</strong></h1>
+      <p>a simple plan, for simple peoples</p>
+    </header>
     <div class="projects">
       <label class="add-project">
         <input type="text" v-model="newProject" placeholder="Create project" @keydown.enter="addProject" />
@@ -128,65 +132,65 @@ export default {
     },
     getProjects() {
       this.axios.get('projects').then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.projects = res.data
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     getTasks(project_id) {
       this.axios.get(`projects/${project_id}/tasks`).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.tasks = res.data
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     addTask(project_id) {
       this.axios.post(`projects/${project_id}/tasks`, {
         name: this.newTask
       }).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.newTask = null
         this.getTasks(project_id)
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     addProject() {
       this.axios.post(`projects`, {
         name: this.newProject
       }).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.newProject = null
         this.getProjects()
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     doneTask(project, task) {
       let action = task.done_at == '0000-00-00 00:00:00' ? 'done' : 'undone';
       this.axios.post(`projects/${project.id}/tasks/${task.id}/${action}`).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         task.done_at = task.done_at == '0000-00-00 00:00:00' ? new Date() : '0000-00-00 00:00:00'
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     deleteTask(project, task) {
       this.axios.delete(`projects/${project.id}/tasks/${task.id}`).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.getTasks(project.id)
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     },
     deleteProject(project) {
       this.axios.delete(`projects/${project.id}`).then(res => {
-        console.log(res.data)
+        //console.log(res.data)
         this.getProjects(project.id)
       }).catch(err => {
-        console.log(err)
+        //console.log(err)
       })
     }
   }

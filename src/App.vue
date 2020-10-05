@@ -1,9 +1,5 @@
 <template>
   <div id="app">
-    <header>
-      <h1>Kurin</h1>
-      <p>a simple plan, for simple peoples</p>
-    </header>
     <router-view/>
   </div>
 </template>
