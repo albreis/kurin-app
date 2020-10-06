@@ -5,11 +5,11 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
-    "version": "npm run build && git add -A dist",
-    "postversion": "npm run build && git add . && git commit -m '' && git push && git push --tags",
+    "version": "npm run build",
+    "postversion": "git add . && git commit -m '' && git push && git push --tags",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
