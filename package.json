@@ -8,8 +8,8 @@
   "version": "1.5.0",
   "private": true,
   "scripts": {
-    "version": "npm run build",
-    "postversion": "git add . && git commit -m '' && git push",
+    "version": "npm run build && git add -A dist",
+    "postversion": "git push && git push --tags && rm -rf build/temp",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
