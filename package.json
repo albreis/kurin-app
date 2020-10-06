@@ -9,7 +9,7 @@
   "private": true,
   "scripts": {
     "version": "npm run build",
-    "postversion": "git add . && git commit -m '' && git push && git push --tags",
+    "postversion": "git add . && git commit -m '' && git push",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
