@@ -5,10 +5,10 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "1.7.3",
+  "version": "1.7.2",
   "private": true,
   "scripts": {
-    "version": "git add . && git commit -m `node -p \"require('./package.json').version\"`",
+    "version": "@powershell git add . && git commit -m $(node -p \"require('./package.json').version\")",
     "postversion": "git push && git push --tags",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
