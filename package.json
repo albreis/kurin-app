@@ -8,8 +8,7 @@
   "version": "1.7.1",
   "private": true,
   "scripts": {
-    "preversion": "@powershell Set-Variable Version $(node -p \"require('./package.json').version\")",
-    "version": "git add . && git commit -m=\"$Version\"",
+    "version": "git add . && git commit -m $(node -p \"require('./package.json').version\")",
     "postversion": "git push && git push --tags",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
