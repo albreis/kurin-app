@@ -1,21 +1,33 @@
 <template>
-  <div class="home">
+  <div class="home">    
     <header>
-      <h1><strong>Kurin</strong></h1>
-      <p>a simple plan, for simple peoples</p>
+      <div class="left">
+        
+      </div>
+      <div class="center">
+        <h1><strong>Kurin</strong></h1>
+        <p>a simple plan, for simple peoples</p>
+      </div>
+      <div class="right">
+      </div>
     </header>
     <div class="projects">
-      <label class="add-project">
+      <label v-if="!project_open" class="add-project">
         <input type="text" v-model="newProject" placeholder="Create project" @keydown.enter="addProject" />
+        <input type="search" placeholder="Search a project..." v-model="search_project" />
+      </label>
+      <label v-else class="add-task">
+        <input type="text" v-model="newTask" placeholder="Create task" @keydown.enter="addTask(project_open.id)" />
+        <input type="search" placeholder="Search a task..." v-model="search_task" />
       </label>
       <transition-group tag="ul" name="slide-fade">
-        <li :key="project.id" :index="key" class="project" v-for="(project, key) in projects">
+        <li :key="project.id" :index="key" class="project" v-for="(project, key) in projects" v-if="!project_open || project_open == project" v-show="!search_project || (search_project && project.name.includes(search_project))">
           <div class="project-name">
             <div class="left">
               <span @click="openProject(project)">
-                <input type="text" readonly="readonly" v-model="project.name">
+                {{project.name}}
+                <small>({{project.done_tasks}} / {{project.open_tasks}})</small>
               </span>
-              <small>({{project.done_tasks}} / {{project.open_tasks}})</small>
             </div>
             <div class="center">
             </div>
@@ -24,15 +36,12 @@
             </div>
           </div>
           <div v-if="project_open == project" class="tasks">
-            <label class="add-task">
-              <input type="text" v-model="newTask" placeholder="Create task" @keydown.enter="addTask(project_open.id)" />
-            </label>
             <transition-group tag="ul" name="slide-fade">
-              <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="task.done_at != '0000-00-00 00:00:00'">
+              <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="task.done_at != '0000-00-00 00:00:00'" v-show="!search_task || (search_task && project.name.includes(search_task))">
                 <div class="left">
                   <div class="task-name">
                     <label><input type="checkbox" @change="doneTask(project, task)" :checked="task.done_at != '0000-00-00 00:00:00'" /></label>
-                    <input type="text" readonly="readonly" v-model="task.name">
+                    {{task.name}}
                   </div>
                 </div>
                 <div class="center">
@@ -51,6 +60,34 @@
 </template>
 
 <style lang="stylus" scoped>
+:focus
+  outline none
+header
+  display flex
+  justify-content space-between
+  align-items center
+  padding 15px 0
+  &>div
+    width 33.33%
+    white-space nowrap
+.add-task, .add-project
+  display flex
+  margin-top 5px
+  input + input
+    margin-left 0
+    border-left none
+  input
+    height 30px
+    margin-right auto
+    display block
+    border 1px solid #789
+    padding 0 15px
+  [type="text"]
+    border-top-left-radius 30px
+    border-bottom-left-radius 30px
+  [type="search"]
+    border-top-right-radius 30px
+    border-bottom-right-radius 30px
 .projects
   input[type="text"]
     width 100%
@@ -64,6 +101,13 @@
     .left
       display flex
       align-items center
+      width 100%
+      justify-content left
+      span
+        width 100%
+      small
+        white-space nowrap
+        margin-left 15px
     input 
       cursor inherit
   .tasks
@@ -72,6 +116,7 @@
     display flex
     align-items center
     cursor pointer
+    font-size 13px
     input 
       cursor inherit
   ul
@@ -108,6 +153,8 @@ export default {
   name: 'Home',
   data() {
     return {
+      search_project: null,
+      search_task: null,
       project_open: null,
       newTask: null,
       newProject: null,
@@ -178,6 +225,7 @@ export default {
       })
     },
     deleteTask(project, task) {
+      if(!confirm('Do you really delete this item?')) return false;
       this.axios.delete(`projects/${project.id}/tasks/${task.id}`).then(res => {
         //console.log(res.data)
         this.getTasks(project.id)
@@ -186,6 +234,7 @@ export default {
       })
     },
     deleteProject(project) {
+      if(!confirm('Do you really delete this item?')) return false;
       this.axios.delete(`projects/${project.id}`).then(res => {
         //console.log(res.data)
         this.getProjects(project.id)
