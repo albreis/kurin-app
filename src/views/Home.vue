@@ -32,15 +32,28 @@
             <div class="center">
             </div>
             <div class="right">
-                <button @click="deleteProject(project)" type="button">remover</button>
+              <div class="actions">
+                  <label class="hidden-input" v-if="project_open"><input type="checkbox" v-model="project.coding" /><i :class="{coding: project.coding}" class="fa fa-server"></i></label>
+                  <label class="hidden-input" v-if="project_open"><input type="checkbox" v-model="project.editing" /><i :class="{editing: project.editing}" class="fa fa-edit"></i></label>
+                  <label class="hidden-input" v-if="project_open"><input type="checkbox" v-model="project.show_done" /><i :class="{show_done: project.show_done}" class="fa fa-check"></i></label>
+                  <button @click="deleteProject(project)" type="button"><i class="fa fa-trash"></i></button>
+              </div>
             </div>
           </div>
+          <div v-if="project_open == project" class="extras">
+            <div class="description-editor" v-if="project.editing">
+              <input type="text" v-model="project.name" />
+              <textarea v-model="project.description" cols="30" rows="10"></textarea>
+              <button type="button" @click="updateProjectData(project)">salvar</button>
+            </div>
+            <code-editor :project_open="project_open" class="code-editor" v-if="project.coding"></code-editor>
+          </div>
           <div v-if="project_open == project" class="tasks">
-            <transition-group tag="ul" name="slide-fade">
-              <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="task.done_at != '0000-00-00 00:00:00'" v-show="!search_task || (search_task && project.name.includes(search_task))">
+            <transition-group tag="ul" name="slide-fade" v-if="!project.editing && !project.coding">
+              <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="isDone(task)" v-show="(!isDone(task) || project.show_done) && (!search_task || (search_task && project.name.includes(search_task)))">
                 <div class="left">
                   <div class="task-name">
-                    <label><input type="checkbox" @change="doneTask(project, task)" :checked="task.done_at != '0000-00-00 00:00:00'" /></label>
+                    <label><input type="checkbox" @change="doneTask(project, task)" :checked="isDone(task)" /></label>
                     {{task.name}}
                   </div>
                 </div>
@@ -48,7 +61,9 @@
 
                 </div>
                 <div class="right">
-                  <button @click="deleteTask(project, task)" type="button">remover</button>
+                  <div class="actions">
+                    <button @click="deleteTask(project, task)" type="button"><i class="fa fa-trash"></i></button>
+                  </div>
                 </div>
               </li>
             </transition-group>
@@ -62,6 +77,31 @@
 <style lang="stylus" scoped>
 :focus
   outline none
+.extras
+  width 100%
+.description-editor
+  textarea
+    width 100%
+    margin-top 15px
+  button
+    border 1px solid #789
+    color #fff
+    font-weight bold
+    background #234!important
+    border-radius 5px
+    text-decoration none!important
+    padding 5px 10px
+    margin-bottom 15px
+.actions
+  display flex
+  &>*
+    margin-left 15px
+    cursor pointer
+  .show_done, .editing
+    color green
+.hidden-input
+  input
+    display none
 header
   display flex
   justify-content space-between
@@ -89,6 +129,10 @@ header
     border-top-right-radius 30px
     border-bottom-right-radius 30px
 .projects
+  button
+    border none
+    background transparent
+    text-decoration underline
   input[type="text"]
     width 100%
     height 30px
@@ -149,8 +193,13 @@ header
 </style>
 
 <script>
+import CodeEditor from '@/components/CodeEditor'
+
 export default {
   name: 'Home',
+  components: {
+    CodeEditor
+  },
   data() {
     return {
       search_project: null,
@@ -170,6 +219,18 @@ export default {
     this.getProjects()
   },
   methods: {
+    updateProjectData(project) {
+      this.axios.patch(`projects/${project.id}`, {
+        name: project.name,
+        description: project.description
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+      })
+    },
+    isDone(task) {
+      return task.done_at != '0000-00-00 00:00:00'
+    },
     openProject(project) {
       this.tasks = []
       this.project_open = this.project_open == project ? null : project
@@ -209,10 +270,12 @@ export default {
     },
     doneTask(project, task) {
       let action = task.done_at == '0000-00-00 00:00:00' ? 'done' : 'undone';
-      this.axios.post(`projects/${project.id}/tasks/${task.id}/${action}`).then(res => {
-        task.done_at = task.done_at == '0000-00-00 00:00:00' ? new Date() : '0000-00-00 00:00:00'
-      }).catch(err => {
-      })
+      if(!this.isDone(task)) {
+        this.axios.post(`projects/${project.id}/tasks/${task.id}/${action}`).then(res => {
+          task.done_at = new Date()
+        }).catch(err => {
+        })
+      }
     },
     deleteTask(project, task) {
       if(!confirm('Do you really delete this item?')) return false;

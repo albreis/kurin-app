@@ -5,9 +5,10 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "1.7.4",
+  "version": "1.8.0",
   "private": true,
   "scripts": {
+    "commit": "git add . && git commit -m %npm_package_version%",
     "version": "git add .",
     "postversion": "git push && git push --tags",
     "serve": "vue-cli-service serve",
@@ -23,6 +24,8 @@
     "axios": "^0.20.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
+    "vue-monaco": "^1.2.1",
+    "vue-prism-editor": "^1.2.2",
     "vue-router": "^3.2.0"
   },
   "devDependencies": {
