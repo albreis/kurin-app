@@ -5,7 +5,7 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "1.9.0",
+  "version": "1.9.1",
   "private": true,
   "scripts": {
     "commit_patch": "git add . && git commit -m %npm_package_version% && npm version patch",
