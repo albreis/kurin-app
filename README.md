@@ -43,17 +43,17 @@ Signup screen shows only if a user don't have a account
 
 Project list screen also very simples for better visualization
 
-![Kurin](./Projects.png)
+![Kurin](./Projects.jpg)
 
 ## Tasks
 
 Tasks screen are show nested in project item
 
-![Kurin](./Tasks.png)
+![Kurin](./Tasks.jpg)
 
-## Done tasks
+## Project details and tools
 
-Done tasks are marked in green
+Now you can connect to a FTP server for edit files. A very simples implementation, work in progress...
 
-![Kurin](./Done.png)
+![Kurin](./ProjectDetails.jpg)
 
