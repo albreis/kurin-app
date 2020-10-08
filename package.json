@@ -11,7 +11,7 @@
     "commit_patch": "npm version patch --no-git-tag-version",
     "commit_minor": "npm version minor --no-git-tag-version",
     "commit_major": "npm version major --no-git-tag-version",
-    "postversion": "git add . && git commit -m %npm_package_version% && git log --pretty=\"- %s\" > CHANGELOG.md && git add CHANGELOG.md && git commit -m %npm_package_version% && git tag -a %npm_package_version% -m %npm_package_version% && git push && git push --tags",
+    "postversion": "npm run build && git add . && git commit -m %npm_package_version% && git log --pretty=\"- %s\" > CHANGELOG.md && git add CHANGELOG.md && git commit -m %npm_package_version% && git tag -a %npm_package_version% -m %npm_package_version% && git push && git push --tags",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
