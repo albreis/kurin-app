@@ -1,3 +1,6 @@
+- 2.0.10
+- Remidos comentários desnecessários
+- Add 2.0.9 changes to CHANGELOG
 - 2.0.9
 - 2.0.8
 - 2.0.7
