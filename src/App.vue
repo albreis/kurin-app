@@ -1,9 +1,14 @@
 <template>
   <div id="app">
+    <main>
     <router-view/>
     <div class="loading" v-if="loading">      
       <img src="../public/loading.gif" />
     </div>
+    </main>
+    <footer>
+      Version {{package.version}} | Developed by <strong><a href="https://wa.me/5551981108038">Albreis - Design & Programação</a></strong>
+    </footer>
   </div>
 </template>
 
@@ -11,6 +16,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans&display=swap");
 body
   overflow-x hidden
+footer
+  text-align center
+  a
+    color #1f1f1f
+    text-decoration none
+main
+  min-height 90vh
 .loading
   position fixed
   top 0
@@ -60,10 +72,12 @@ import { eventBus } from './eventBus.js'
 export default {
   data() {
     return {
+      package: {},
       loading: false
     }
   },
   mounted() {
+    this.package = require('../package.json')
     eventBus.$on('request', value => { this.loading = true })
     eventBus.$on('response', value => { this.loading = false })
   }
