@@ -17,7 +17,6 @@ http.interceptors.request.use(async (config) => {
   eventBus.$emit('request')
   return config;
 }, (error) => {
-  // I cand handle a request with errors here
   return Promise.reject(error);
 });
 
@@ -25,7 +24,6 @@ http.interceptors.response.use(async (config) => {
   eventBus.$emit('response')
   return config;
 }, (error) => {
-  // I cand handle a request with errors here
   return Promise.reject(error);
 });
 
