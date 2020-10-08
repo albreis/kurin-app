@@ -5,12 +5,12 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "private": true,
   "scripts": {
-    "commit_patch": "npm version patch --no-git-tag-version && git add . && git commit -m %npm_package_version% && git tag -l %npm_package_version% && git push && git push --tags",
-    "commit_minor": "npm version minor --no-git-tag-version && npm run build && git add . && git commit -m %npm_package_version% && git tag -l %npm_package_version% && git push && git push --tags",
-    "commit_major": "npm version major --no-git-tag-version && npm run build && git add . && git commit -m %npm_package_version% && git tag -l %npm_package_version% && git push && git push --tags",
+    "commit_patch": "git log --pretty=\"- %s\" > CHANGELOG.md && npm version patch --no-git-tag-version && git add . && git commit -m %npm_package_version% && git tag -a %npm_package_version% && git push && git push --tags",
+    "commit_minor": "git log --pretty=\"- %s\" > CHANGELOG.md && npm version minor --no-git-tag-version && npm run build && git add . && git commit -m %npm_package_version% && git tag -a %npm_package_version% && git push && git push --tags",
+    "commit_major": "git log --pretty=\"- %s\" > CHANGELOG.md && npm version major --no-git-tag-version && npm run build && git add . && git commit -m %npm_package_version% && git tag -a %npm_package_version% && git push && git push --tags",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "electron:build": "vue-cli-service electron:build",
