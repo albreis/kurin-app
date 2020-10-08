@@ -1,3 +1,5 @@
+- 2.0.11
+- Add 2.0.10 changes to CHANGELOG
 - 2.0.10
 - Remidos comentários desnecessários
 - Add 2.0.9 changes to CHANGELOG
