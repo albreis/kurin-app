@@ -5,7 +5,7 @@
     "email": "contato@albreis.com.br"
   },
   "description": "A simple plan, for simple peoples",
-  "version": "2.0.16",
+  "version": "2.0.17",
   "private": true,
   "scripts": {
     "commit_patch": "npm version patch --no-git-tag-version && git add . && git commit -m %npm_package_version% && git log --pretty=\"- %s\" > CHANGELOG.md && git add CHANGELOG.md && git commit -m %npm_package_version% && git tag -a %npm_package_version% -m %npm_package_version% && git push && git push --tags",
