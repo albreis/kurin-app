@@ -1,3 +1,5 @@
+- 2.0.18
+- 2.0.17
 - 2.0.17
 - %npm_package_version%
 - %npm_package_version%
