@@ -1,3 +1,5 @@
+- Removido componente Header
+- Add 2.0.11 changes to CHANGELOG
 - 2.0.11
 - Add 2.0.10 changes to CHANGELOG
 - 2.0.10
