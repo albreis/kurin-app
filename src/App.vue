@@ -7,7 +7,7 @@
     </div>
     </main>
     <footer>
-      Version {{package.version}} | Developed by <strong><a href="https://wa.me/5551981108038">Albreis - Design & Programação</a></strong>
+      Version {{package.version}} | Developed by <strong><a href="https://wa.me/5551981108038">Albreis - Design &amp; Programação</a></strong>
     </footer>
   </div>
 </template>
