@@ -40,157 +40,55 @@
               </div>
             </div>
           </div>
-          <div v-if="project_open == project" class="extras">
-            <div class="description-editor" v-if="project.editing">
-              <input type="text" v-model="project.name" />
-              <textarea v-model="project.description" cols="30" rows="10"></textarea>
-              <button type="button" @click="updateProjectData(project)">salvar</button>
+          <div v-if="project_open == project">
+            <div class="extras">
+              <div class="description-editor" v-if="project.editing">
+                <input type="text" v-model="project.name" />
+                <textarea v-model="project.description" cols="30" rows="10"></textarea>
+                <button type="button" @click="updateProjectData(project)">salvar</button>
+              </div>
             </div>
-            <code-editor :project_open="project_open" class="code-editor" v-if="project.coding"></code-editor>
-          </div>
-          <div v-if="project_open == project" class="tasks">
-            <transition-group tag="ul" name="slide-fade" v-if="!project.editing && !project.coding">
-              <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="isDone(task)" v-show="(!isDone(task) || project.show_done) && (!search_task || (search_task && project.name.includes(search_task)))">
-                <div class="left">
-                  <div class="task-name">
-                    <label><input type="checkbox" @change="doneTask(project, task)" :checked="isDone(task)" /></label>
-                    {{task.name}}
-                  </div>
-                </div>
-                <div class="center">
+            <div class="tasks">
+              <transition-group tag="ul" name="slide-fade">
+                <li class="task" :key="task.id" :index="key" v-for="(task, key) in tasks" :data-done="isDone(task)" v-show="(!isDone(task) || project.show_done) && (!search_task || (search_task && project.name.includes(search_task))) && (!task_open || task_open == task)">
+                  <div class="task-header">
+                    <div class="left">
+                      <div class="task-name">
+                        <label><input type="checkbox" @change="doneTask(project, task)" :checked="isDone(task)" /></label>
+                        <span @click="openTask(task)">
+                          {{task.name}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="center">
 
-                </div>
-                <div class="right">
-                  <div class="actions">
-                    <button @click="deleteTask(project, task)" type="button"><i class="fa fa-trash"></i></button>
+                    </div>
+                    <div class="right">
+                      <div class="actions">
+                        <label class="hidden-input" v-if="task_open"><input type="checkbox" v-model="task.editing" /><i :class="{editing: task.editing}" class="fa fa-edit"></i></label>
+                        <button @click="deleteTask(project, task)" type="button"><i class="fa fa-trash"></i></button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </li>
-            </transition-group>
+                  <div class="task-content">
+                    <div class="description-editor" v-if="task.editing">
+                      <input type="text" v-model="task.name" />
+                      <textarea v-model="task.description" cols="30" rows="10"></textarea>
+                      <button type="button" @click="updateTaskData(task)">salvar</button>
+                    </div>
+                  </div>
+                </li>
+              </transition-group>
+            </div>
+            <div class="editor-area">
+              <code-editor :project_open="project_open" class="code-editor" v-if="project.coding"></code-editor>
+            </div>
           </div>
         </li>
       </transition-group>
     </div>
   </div>
 </template>
-
-<style lang="stylus" scoped>
-:focus
-  outline none
-.extras
-  width 100%
-.description-editor
-  textarea
-    width 100%
-    margin-top 15px
-  button
-    border 1px solid #789
-    color #fff
-    font-weight bold
-    background #234!important
-    border-radius 5px
-    text-decoration none!important
-    padding 5px 10px
-    margin-bottom 15px
-.actions
-  display flex
-  &>*
-    margin-left 15px
-    cursor pointer
-  .show_done, .editing
-    color green
-.hidden-input
-  input
-    display none
-header
-  display flex
-  justify-content space-between
-  align-items center
-  padding 15px 0
-  &>div
-    width 33.33%
-    white-space nowrap
-.add-task, .add-project
-  display flex
-  margin-top 5px
-  input + input
-    margin-left 0
-    border-left none
-  input
-    height 30px
-    margin-right auto
-    display block
-    border 1px solid #789
-    padding 0 15px
-  [type="text"]
-    border-top-left-radius 30px
-    border-bottom-left-radius 30px
-  [type="search"]
-    border-top-right-radius 30px
-    border-bottom-right-radius 30px
-.projects
-  button
-    border none
-    background transparent
-    text-decoration underline
-  input[type="text"]
-    width 100%
-    height 30px
-  .project-name
-    width 100%
-    cursor pointer
-    display flex
-    align-items center
-    justify-content space-between
-    .left
-      display flex
-      align-items center
-      width 100%
-      justify-content left
-      span
-        width 100%
-      small
-        white-space nowrap
-        margin-left 15px
-    input 
-      cursor inherit
-  .tasks
-    width 100%
-  .task-name
-    display flex
-    align-items center
-    cursor pointer
-    font-size 13px
-    input 
-      cursor inherit
-  ul
-    list-style none
-    text-align left
-    padding 0
-    margin 0
-    li
-      padding 5px 0
-      cursor pointer
-      display flex
-      justify-content space-between
-      align-items center
-      flex-wrap wrap
-      ul
-        border-left 1px solid #678
-        width 100%
-        li
-          padding 5px
-    li+li
-      border-top 1px solid #678
-  [data-done="true"]
-    background #5d8
-  [readonly="readonly"]:focus, [readonly="readonly"]
-    border none
-    padding 0
-    margin 0
-    outline none
-    background transparent
-</style>
 
 <script>
 import CodeEditor from '@/components/CodeEditor'
@@ -205,6 +103,7 @@ export default {
       search_project: null,
       search_task: null,
       project_open: null,
+      task_open: null,
       newTask: null,
       newProject: null,
       projects: [],
@@ -219,6 +118,15 @@ export default {
     this.getProjects()
   },
   methods: {
+    updateTaskData(task) {
+      this.axios.patch(`projects/${this.project_open.id}/tasks/${task.id}`, {
+        name: task.name,
+        description: task.description
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+      })
+    },
     updateProjectData(project) {
       this.axios.patch(`projects/${project.id}`, {
         name: project.name,
@@ -234,9 +142,12 @@ export default {
     openProject(project) {
       this.tasks = []
       this.project_open = this.project_open == project ? null : project
-      if(this.project_open) {
+      if(this.project_open == project) {
         this.getTasks(project.id);
       }
+    },
+    openTask(task) {
+      this.task_open = this.task_open == task ? null : task
     },
     getProjects() {
       this.axios.get('projects').then(res => {
@@ -294,3 +205,128 @@ export default {
   }
 }
 </script>
+
+
+<style lang="stylus" scoped>
+:focus
+  outline none
+.extras
+  width 100%
+.fa-trash
+  color #f76
+.description-editor
+  textarea
+    width 100%
+    margin-top 15px
+  button
+    border 1px solid #789
+    color #fff
+    font-weight bold
+    background #234!important
+    border-radius 5px
+    text-decoration none!important
+    padding 5px 10px
+    margin-bottom 15px
+.actions
+  display flex
+  &>*
+    margin-left 15px
+    cursor pointer
+  .show_done, .editing
+    color green
+.hidden-input
+  input
+    display none
+header
+  display flex
+  justify-content space-between
+  align-items center
+  padding 15px 0
+  &>div
+    width 33.33%
+    white-space nowrap
+.add-task, .add-project
+  display flex
+  margin-top 5px
+  input + input
+    margin-left 0
+    border-left none
+  input
+    height 30px
+    margin-right auto
+    display block
+    border 1px solid #789
+    padding 0 15px
+  [type="text"]
+    border-top-left-radius 30px
+    border-bottom-left-radius 30px
+  [type="search"]
+    border-top-right-radius 30px
+    border-bottom-right-radius 30px
+.projects
+  .project
+    &>div
+      width 100%
+  button
+    border none
+    background transparent
+    text-decoration underline
+  input[type="text"]
+    width 100%
+    height 30px
+  .project-name
+    width 100%
+    cursor pointer
+    display flex
+    align-items center
+    justify-content space-between
+    .left
+      display flex
+      align-items center
+      width 100%
+      justify-content left
+      span
+        width 100%
+      small
+        white-space nowrap
+        margin-left 15px
+    input 
+      cursor inherit
+  .tasks
+    width 100%
+  .task-name
+    display flex
+    align-items center
+    cursor pointer
+    font-size 13px
+    input 
+      cursor inherit
+  ul
+    list-style none
+    text-align left
+    padding 0
+    margin 0
+    li
+      padding 5px 0
+      cursor pointer
+      .task-header
+        display flex
+        justify-content space-between
+        align-items center
+        flex-wrap wrap
+      ul
+        border-left 1px solid #678
+        width 100%
+        li
+          padding 5px
+    li+li
+      border-top 1px solid #678
+  [data-done="true"]
+    background #5d8
+  [readonly="readonly"]:focus, [readonly="readonly"]
+    border none
+    padding 0
+    margin 0
+    outline none
+    background transparent
+</style>

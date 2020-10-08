@@ -12,10 +12,13 @@
       <editor class="editor" :class="{hashfiles: files.length}" :options="options" v-model="code" :language="language"></editor>
       </div>
       <div class="right">
-        <button v-if="selected_file" type="button" @click="save">Save</button> 
-        <button v-if="selected_file" type="button" @click="saveClose">Save and Close</button>
+        <button v-if="selected_file" type="button" @click="save">Save</button>&nbsp;&nbsp;&nbsp;&nbsp;
+        <!-- <button v-if="selected_file" type="button" @click="saveClose">Save and Close</button> -->
+        <hr/>
+        <input v-model="search_file" placeholder="Search a file..." />
+        <hr/>
         <ul class="files">
-          <li v-for="file in files" :key="file" :class="{active: file == selected_file}" @click="loadFile(file)">
+          <li v-for="file in files" :key="file" :class="{active: file == selected_file}" @click="loadFile(file)" v-show="!search_file || (search_file && file.includes(search_file))">
             {{file}}
           </li>
         </ul>
@@ -33,6 +36,7 @@ export default {
   props: ['project_open'],
   data() {
     return {
+      search_file: null,
       options: {
         minimap: {
           enabled: false,
@@ -42,13 +46,65 @@ export default {
       },
       code: 'asdasd',
       files: [],
-      current_dir: [],
       selected_file: '.',
       language: '',
       ftp_host: '',
       ftp_user: '',
       ftp_pass: '',
     }
+  },
+  mounted() {
+    if(sessionStorage.search_file){
+      this.search_file = JSON.parse(sessionStorage.search_file)
+    }
+    if(sessionStorage.code){
+      this.code = JSON.parse(sessionStorage.code)
+    }
+    if(sessionStorage.files){
+      this.files = JSON.parse(sessionStorage.files)
+    }
+    if(sessionStorage.selected_file){
+      this.selected_file = JSON.parse(sessionStorage.selected_file)
+    }
+    if(sessionStorage.language){
+      this.language = JSON.parse(sessionStorage.language)
+    }
+    if(sessionStorage.ftp_host){
+      this.ftp_host = JSON.parse(sessionStorage.ftp_host)
+    }
+    if(sessionStorage.ftp_user){
+      this.ftp_user = JSON.parse(sessionStorage.ftp_user)
+    }
+    if(sessionStorage.ftp_pass){
+      this.ftp_pass = JSON.parse(sessionStorage.ftp_pass)
+    }
+  },
+  watch: {
+    
+    search_file() {
+      sessionStorage.search_file = JSON.stringify(this.search_file)
+    },
+    code() {
+      sessionStorage.code = JSON.stringify(this.code)
+    },
+    files() {
+      sessionStorage.files = JSON.stringify(this.files)
+    },
+    selected_file() {
+      sessionStorage.selected_file = JSON.stringify(this.selected_file)
+    },
+    language() {
+      sessionStorage.language = JSON.stringify(this.language)
+    },
+    ftp_host() {
+      sessionStorage.ftp_host = JSON.stringify(this.ftp_host)
+    },
+    ftp_user() {
+      sessionStorage.ftp_user = JSON.stringify(this.ftp_user)
+    },
+    ftp_pass() {
+      sessionStorage.ftp_pass = JSON.stringify(this.ftp_pass)
+    },
   },
   methods: {
     save() {
@@ -75,7 +131,6 @@ export default {
         ftp_host: this.ftp_host,
         ftp_user: this.ftp_user,
         ftp_pass: this.ftp_pass,
-        current_dir: this.current_dir,
         file: this.selected_file,
         project_id: this.project_open.id,
       }).then(res => {
@@ -85,13 +140,7 @@ export default {
           this.code = res.data
         } else if (typeof res.data == 'object'){
           this.files = res.data
-          if(this.selected_file == '..' && this.current_dir.length > 1) {
-            this.current_dir.pop()
-          } else if(this.selected_file !== '..' && this.selected_file != '.') {
-            this.current_dir.push(this.selected_file)
-          } else if (this.current_dir.length == 0) {
-            this.current_dir = ['.']
-          }
+          sessionStorage.files = JSON.stringify(this.files)
         }
         console.log(this.current_dir)
       }).catch(err => {

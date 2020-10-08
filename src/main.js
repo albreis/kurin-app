@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import axios from 'axios'
-
+import { eventBus } from './eventBus.js'
 
 var http = axios.create({
   baseURL: `https://kurin.albreis.com.br/api/`,
@@ -14,6 +14,15 @@ var http = axios.create({
 
 http.interceptors.request.use(async (config) => {
   config.headers['X-User-Token'] = sessionStorage.token
+  eventBus.$emit('request')
+  return config;
+}, (error) => {
+  // I cand handle a request with errors here
+  return Promise.reject(error);
+});
+
+http.interceptors.response.use(async (config) => {
+  eventBus.$emit('response')
   return config;
 }, (error) => {
   // I cand handle a request with errors here
