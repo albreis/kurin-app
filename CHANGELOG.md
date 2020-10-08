@@ -1,3 +1,4 @@
+- %npm_package_version%
 - Removido componente Header
 - Add 2.0.11 changes to CHANGELOG
 - 2.0.11
