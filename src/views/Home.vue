@@ -26,7 +26,7 @@
             <div class="left">
               <span @click="openProject(project)">
                 {{project.name}}
-                <small>({{project.done_tasks}} / {{project.open_tasks}})</small>
+                <small>open: {{project.open_tasks}} / done: {{project.done_tasks}} / total: {{tasks.length}}</small>
               </span>
             </div>
             <div class="center">
@@ -150,12 +150,14 @@ export default {
       this.task_open = this.task_open == task ? null : task
     },
     getProjects() {
+      this.project_open = null
       this.axios.get('projects').then(res => {
         this.projects = res.data
       }).catch(err => {
       })
     },
     getTasks(project_id) {
+      this.task_open = null
       this.axios.get(`projects/${project_id}/tasks`).then(res => {
         this.tasks = res.data
       }).catch(err => {
