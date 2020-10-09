@@ -4,6 +4,8 @@ import router from './router'
 import axios from 'axios'
 import { eventBus } from './eventBus.js'
 
+Vue.prototype.$bus = eventBus
+
 var http = axios.create({
   baseURL: `https://kurin.albreis.com.br/api/`,
   headers: {
