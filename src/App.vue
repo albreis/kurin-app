@@ -68,7 +68,6 @@ header
 }
 </style>
 <script>
-import { eventBus } from './eventBus.js'
 export default {
   data() {
     return {
@@ -78,8 +77,8 @@ export default {
   },
   mounted() {
     this.package = require('../package.json')
-    eventBus.$on('request', value => { this.loading = true })
-    eventBus.$on('response', value => { this.loading = false })
+    this.$bus.$on('request', value => { this.loading = true })
+    this.$bus.$on('response', value => { this.loading = false })
   }
 }
 </script>
