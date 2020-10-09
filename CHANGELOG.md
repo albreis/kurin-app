@@ -1,3 +1,8 @@
+- 2.0.23
+- Criada variável global para o EventBus
+- Alterado import do EventBus por uma variável global
+- Alterada chamada ao EventBus
+- 2.0.22
 - 2.0.22
 - Atualizado build
 - 2.0.21
